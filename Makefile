@@ -1,8 +1,9 @@
 CXXFLAGS := \
-	-std=c++14 \
 	-O0 -g -Wall \
 	-march=native -mtune=native \
 	-I/usr/local/opt/libunwind-headers/include
+
+LDFLAGS := -lunwind
 
 TARGETS := \
 	backtrace

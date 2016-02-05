@@ -1,7 +1,10 @@
-#include <cxxabi.h>
-#include <libunwind.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <cxxabi.h>
+
+#define UNW_LOCAL_ONLY
+#include <libunwind.h>
 
 void backtrace()
 {
@@ -22,7 +25,7 @@ void backtrace()
 
     if ( !unw_get_proc_name(&cursor, symbol, sizeof(symbol), &off) ) {
       int status;
-      if ( (name = abi::__cxa_demangle(symbol, nullptr, nullptr, &status)) == 0 )
+      if ( (name = abi::__cxa_demangle(symbol, NULL, NULL, &status)) == 0 )
         name = symbol;
     }
 
