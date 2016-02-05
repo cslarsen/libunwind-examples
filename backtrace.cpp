@@ -1,10 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <cxxabi.h>
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 
 #define UNW_LOCAL_ONLY
 #include <libunwind.h>
+
+#include <cxxabi.h>
+
+#include <stdio.h>
+#include <stdlib.h>
 
 void backtrace()
 {
@@ -14,6 +17,7 @@ void backtrace()
   unw_getcontext(&context);
   unw_init_local(&cursor, &context);
 
+  int n=0;
   while ( unw_step(&cursor) ) {
     unw_word_t ip, sp, off;
 
@@ -29,8 +33,12 @@ void backtrace()
         name = symbol;
     }
 
-    printf("ip=%p sp=%p %s + %p\n", reinterpret_cast<void*>(ip),
-        reinterpret_cast<void*>(sp), name, reinterpret_cast<void*>(off));
+    printf("#%-2d 0x%016" PRIxPTR " sp=0x%016" PRIxPTR " %s + 0x%" PRIxPTR "\n",
+        ++n,
+        static_cast<uintptr_t>(ip),
+        static_cast<uintptr_t>(sp),
+        name,
+        static_cast<uintptr_t>(off));
 
     if ( name != symbol )
       free(name);
@@ -40,17 +48,15 @@ void backtrace()
 int fac(int n)
 {
   if ( n == 0 ) {
-    printf("Backtrace:\n");
     backtrace();
     return 1;
   } else {
-    printf("fac(%d)\n", n);
     return n*fac(n-1);
   }
 }
 
 int main()
 {
-  printf("10! = %d\n", fac(10));
+  fac(10);
   return 0;
 }
