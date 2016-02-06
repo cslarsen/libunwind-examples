@@ -3,7 +3,9 @@ CXXFLAGS := \
 	-march=native -mtune=native \
 	-I/usr/local/opt/libunwind-headers/include
 
-LDFLAGS := -lunwind
+ifeq ($(shell uname), Linux)
+	LDFLAGS := -lunwind
+endif
 
 TARGETS := \
 	backtrace
