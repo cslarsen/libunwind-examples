@@ -1,10 +1,12 @@
+INCLUDE := $(INCLUDE) /usr/local/opt/libunwind-headers/include
+
 CXXFLAGS := \
 	-O0 -g -Wall \
-	-march=native -mtune=native \
-	-I/usr/local/opt/libunwind-headers/include
+	$(addprefix -I,$(INCLUDE)) \
+	$(addprefix -L,$(LIB))
 
 ifeq ($(shell uname), Linux)
-	LDFLAGS := -lunwind
+	LDLIBS := -lunwind
 endif
 
 TARGETS := \
